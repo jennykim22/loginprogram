@@ -1,0 +1,57 @@
+{% extends "admin.html" %}
+{% block content %}
+<div class="admin-content-wrapper">
+    <div class="page-header">
+        <h2>게시판 관리</h2>
+        </div>
+    
+    <table class="board-table">
+        <tbody>
+            <tr>
+                <button type="submit"></button>
+            </tr>
+            {% for post in posts %}
+            <tr class="{% if post.is_notice %}notice-row{% endif %}"> 
+                <td>{{ post.id }}</td>                    
+                <td class="title-cell" style="text-align: left;">
+                    {% if post.is_notice %}
+                        <span style="font-weight: 600;">[📌공지]</span>
+                    {% endif %}
+                        <a href="/admin/read/{{ post.id }}?from=admin">{{ post.title }}</a>
+                </td>
+                <td>{{ post.owner.username }}</td>
+                <td>{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <form action="/admin/board/delete/{{post.id}}" method="post" onsubmit="return confirm('삭제하시겠습니까?');">
+                        <button type="submit" style="color: #ef4444; border: none; background: none; cursor: pointer; font-size: 13px;">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination-container">
+        <!-- 페이징처리 -->
+            <div class="pagination-nav">
+                <a href="?page=1" class="page-btn first {{ 'disabled' if current_page == 1 else '' }}">&lt;&lt;</a>
+        
+                <a href="?page={{ current_page - 1 if current_page > 1 else 1 }}" class="page-btn prev {{ 'disabled' if current_page == 1 else '' }}">&lt;</a>
+
+                {% for p in range(block_start, block_end + 1) %}
+                <a href="?page={{ p }}" class="page-btn number {{ 'active' if p == current_page else '' }}">{{ p }}</a>
+                {% endfor %}
+
+                <a href="?page={{ current_page + 1 if total_pages > current_page else total_pages }}" class="page-btn next {{ 'disabled' if current_page == total_pages else '' }}">&gt;</a>
+
+                <a href="?page={{ total_pages }}" class="page-btn last {{ 'disabled' if current_page == total_pages else '' }}">&gt;&gt;</a>
+            </div>
+
+            <div class="pagination-info">
+                <span class="page-stat">[{{ current_page }}/{{ total_pages }}]</span>
+                <span class="total-stat">[총 {{ "{:,}".format(total_count) }}건]</span>
+            </div>
+        </div>
+</div>
+{% endblock %}
+{% block welcome_msg %}{% endblock %}

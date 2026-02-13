@@ -1,0 +1,57 @@
+{% extends "admin.html" %}
+{% block content %}
+<div class="admin-content-wrapper">
+    <div class="page-header">
+        <h2>회원 관리</h2></div>
+    <div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>username</th>
+                    <th>권한</th>
+                    <th>권한 관리</th>
+                    <th>회원 삭제</th> 
+                    <th>가입 일시</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}                    
+                <tr>
+                    <td class="id-cell">{{user.id}}</td>
+                    <td class="user-cell">{{user.username}}</td>
+                    <td>
+                        <span class="role-badge {{'admin' if user.is_admin else 'user'}}">
+                            {{ "관리자" if user.is_admin else "일반회원" }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if user.username !=admin_name %}
+                        <form action="/admin/toggle/{{user.id}}" method="post">
+                            <button type="submit" class="action-btn role-btn">변경</button>
+                        </form>
+                        {%else%}
+                        <span>-</span>
+                        {%endif%}
+                    </td>
+                    <td>
+                        {% if user.username !=admin_name %}
+                        <form action="/admin/delete/{{user.id}}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                            <button type="submit" class="action-btn delete-btn">삭제</button>
+                        </form> 
+                        {% else %}
+                        <span>-</span>
+                        {% endif %}
+                    </td>
+                    <td class="date-cell">
+                        {{user.created_at.strftime('%Y.%m.%d %H:%M')}}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</html>
+{%endblock%}
+{% block welcome_msg %}{% endblock %}

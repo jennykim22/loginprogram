@@ -1,0 +1,66 @@
+{% extends "admin.html" %}
+{% block content %}
+<div class="admin-content-wrapper">
+    <div class="page-header">
+        <h2>대시보드</h2>
+    </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p class="stat-label">전체 회원 수</p>
+                <h3 class="stat-value">{{stats.total_users}}명</h3>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">전체 게시글 수</p>
+                <h3 class="stat-value">{{stats.total_posts}}개</h3>
+            </div>
+        </div>
+        <div class="activity-grid">
+            <div class="activity-box">
+                <div class="box-header">
+                    <h4>최근 가입한 유저</h4>
+                    <a href="/admin/users">전체보기</a>
+                </div>
+                <ul class="activity-list">
+                {% for u in stats.recent_users %}
+                <li>
+                    <span class="username">{{ u.username }}</span>
+                    <span class="date">{{ u.created_at.strftime('%m-%d') }}</span>
+                </li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="activity-box">
+                <div class="box-header">
+                    <h4>최근 작성된 글</h4>
+                    <a href="/admin/board">전체보기</a>
+                </div>
+                <ul class="activity-list">
+                {% for post in stats.recent_posts %}
+                <li>
+                    <span class="username">{{ post.title }}</span>
+                    <span class="date">{{ post.created_at.strftime('%m-%d') }}</span>
+                </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <!-- 수정:대시보드 추이 -->
+        <div class="activity-box" style="grid-column: 1/ -1; margin-top: 20px;">
+                <div class="box-header">
+                    <h4>작성된 글 추이</h4>
+                </div>
+                <div class="chart-container" style="padding: 20px; height: 300px;">
+                    <canvas id="postsChart"></canvas>
+                </div>
+            </div>
+    </div>
+    <script id="chart-data" type="application/json">
+    { 
+        "labels": {{ stats.chart_labels | tojson | safe }},
+        "values": {{ stats.chart_values | tojson | safe }}
+    }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</div>
+{% endblock %}
+{% block welcome_msg %}{% endblock %}

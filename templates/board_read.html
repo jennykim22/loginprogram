@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+        <link rel="icon" href="{{ url_for('static', path='/favicon.ico') }}">
+        <link rel="stylesheet" type="text/css" href="/static/style.css" >
+        <meta charset="UTF-8">
+        <title>{{post.title}}</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="top-bar">
+                <a href="/board" class="brand-name-board">blueprint</a>        
+            </div>
+            <hr>
+            <article class="admin-read-container">
+                <div class="post-header">
+                    <h1 class="post-title">{{post.title}}</h1>
+                    <h4 style="color: rgb(129, 128, 128);">#{{post.id}}</h4>
+                    <div class="pos-meta" style="display: flex; align-items: center; gap: 10px; margin-top: 0;">
+                        <span>{{user.username}}</span>
+                        <p style="color: rgb(129, 128, 128);">{{ post.created_at.strftime('%Y.%m.%d %H:%M') }}</p>
+                    </div>
+                </div>
+                <hr style="border: 0; border-top: 0.5px solid rgb(238, 238, 238);">
+                <div class="user-menu">
+                    {% if user and (user.is_admin or user.id == post.owner_id) %}  
+                    <form action="/board/edit/{{ post.id }}">
+                        <button type="submit" class="edit_button">수정</button>
+                    </form>
+                    <form action="/board/delete/{{post.id}}" method="post" style="display:inline;"> 
+                        <button type="submit" class="edit_button" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
+                    </form>
+                    {% endif %}
+                    {% if user.is_admin and request.query_params.get('from')=='admin' %}
+                        <a href="/admin/board" class="btn-link">목록</a>
+                    {% else %}
+                        <a href="/board" class="btn-link">목록</a>
+                    {% endif %}
+                </div>
+                <hr style="border: 0; border-top: 0.5px solid rgb(238, 238, 238);">
+                <div class="read-content">{{post.content|safe}}</div>
+                <hr style="border: 0; border-top: 0.5px solid rgb(238, 238, 238);">
+                <div class="user-menu">
+                    {% if user.is_admin and request.query_params.get('from') == 'admin' %}
+                        <a href="/admin/board" class="btn-link">목록</a>
+                    {% else %}
+                        <a href="/board" class="btn-link">목록</a>
+                    {% endif %}
+                </div>
+            </article>
+        </div>
+</div>
+    </body>
+    <div id="chat-container-wrapper">
+    
+    <button id="chatbot-btn" onclick="toggleChat()">💬</button>
+
+    <div id="chat-window">
+        <div class="chat-header">
+            <span>AI 챗봇</span> <span class="close-btn" onclick="toggleChat()">✕</span>
+        </div>
+        
+        <div id="chat-messages">
+            <div class="message ai-msg">안녕하세요! 무엇을 도와드릴까요?</div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="메시지를 입력하세요..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="send-btn" onclick="sendMessage()">
+                ➤ 
+            </button>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', path='chatbot.js') }}"></script>
+</html>

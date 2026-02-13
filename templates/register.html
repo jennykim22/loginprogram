@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+        <link rel="icon" href="{{ url_for('static', path='/favicon.ico') }}">
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <meta charset="UTF-8">
+    </head>
+        <body style="background-color: rgb(235, 242, 248);">
+            <form method="post" class="register_form" action="/register" onsubmit="return validateForm()">
+                <h1 style="text-align: center;" class="brand-name">Blueprint</h1>
+                <div>
+                    <label for="username">ID</label>
+                    <input type="text" id="username" name="username" required>
+                    <button type="button" class="id_overlap_button" onclick="id_overlap_check()">ID 중복확인</button> 
+                    <span id="username-msg"></span>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div>
+                    <input type="submit" class="big_button" value="Create account">
+                </div>
+                <div>
+                    <span style="color: #a8a5a5;">Have an account?</span>
+                    <a href="/login" style="color: black;">Sign in →</a>
+                </div>
+            </form>
+        <script src="{{ url_for('static', path='admin.js') }}"></script>   
+        </body>
+</html>

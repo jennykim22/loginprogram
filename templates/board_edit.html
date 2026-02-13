@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+        <link rel="icon" href="{{ url_for('static', path='/favicon.ico') }}">
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div class="container">
+            <form action="/board/edit/{{post.id}}" method="post" enctype="multipart/form-data">
+                <div class="top-bar">
+                    <h1 class="brand-name-board">blueprint</h1>        
+                </div>
+                <hr>
+                <div class="admin-read-container">
+                <input type="text" class="title-write" name="title" id="title" value="{{post.title}}">
+                <textarea name="content" class="content-write" id="content">{{post.content}}</textarea>
+                {% if user.is_admin %}
+                <label>
+                    <input type="checkbox" name="is_notice" id="is_notice" value="true" {% if post.is_notice %}checked{% endif %}>공지사항
+                </label>
+                {% endif %}
+                <div class="user-menu">
+                    <button type="submit" class="publish_button">수정 완료</button>
+                    <a href="/board" class="btn-link">목록</a>                      
+                </div>
+                </div>
+            </form>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+        <script src="{{ url_for('static', path='admin.js') }}"></script>
+    </body>
+</html>

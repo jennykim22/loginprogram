@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게시판</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', path='/favicon.ico') }}">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container fade-in">
+        <div class="top-bar">
+            <a href="/board" class="brand-name-board">blueprint</a>        
+            <div class="user-menu">
+                {% if user %}
+                    <a href="/board/write" class="btn-link">Write</a>
+                    <a href="/logout" class="btn-link">Sign out</a>
+                    <span class="username">
+                        {% if user.is_admin %}
+                            <a href="/admin">{{ user.username }} page</a>
+                        {% else %}
+                            {{ user.username }}
+                        {% endif %}
+                    </span>          
+                {% else %}
+                    <a href="/login" class="btn-link">Sign in</a>
+                    <a href="/register" class="btn-link">Sign up</a>
+                {% endif %}
+            </div>
+        </div>
+        <hr>
+        <table class="board-table">
+        <tbody>
+            {% if posts %}
+                {% for post in posts %}
+                <tr class="{% if post.is_notice %}notice-row{% endif %}">                   
+                    <td>{{ total_count - ((current_page - 1) * limit + loop.index0) }}</td>                    
+                    <td class="title-cell" style="text-align: left;">
+                        {% if post.is_notice %}
+                            <span style="font-weight: 600;">[📌공지]</span>
+                        {% endif %}
+                        <a href="/board/read/{{post.id}}">{{ post.title }}</a>
+                    </td>
+                    <td>{{ post.owner.username}}</td>
+                    <td>{{ post.created_at.strftime('%Y-%m-%d') }}</td>        
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 50px;">검색 결과가 없습니다.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+        </table>        
+
+        <div class="pagination-container"> 
+            <!-- 페이징처리 -->
+            <div class="pagination-nav">
+                <!-- first -->
+                <a href="?page=1{% if keyword %}&keyword={{ keyword }}{% endif %}" class="page-btn first {{ 'disabled' if current_page == 1 else '' }}">&lt;&lt;</a>
+                <!-- prev -->
+                <a href="?page={{ current_page - 1 if current_page > 1 else 1 }}{% if keyword %}&keyword={{ keyword }}{% endif %}" class="page-btn prev {{ 'disabled' if current_page == 1 else '' }}">&lt;</a>
+                <!-- current -->
+                {% for p in range(block_start, block_end + 1) %}
+                <a href="?page={{ p }}{% if keyword %}&keyword={{ keyword }}{% endif %}" class="page-btn number {{ 'active' if p == current_page else '' }}">{{ p }}</a>
+                {% endfor %}
+                <!-- next -->
+                <a href="?page={{ current_page + 1 if total_pages > current_page else total_pages }}{% if keyword %}&keyword={{ keyword }}{% endif %}" class="page-btn next {{ 'disabled' if current_page == total_pages else '' }}">&gt;</a>
+                <!-- last -->
+                <a href="?page={{ total_pages }}{% if keyword %}&keyword={{ keyword }}{% endif %}" class="page-btn last {{ 'disabled' if current_page == total_pages else '' }}">&gt;&gt;</a>
+            </div>
+
+            <div class="pagination-info">
+                <span class="page-stat">[{{ current_page }}/{{ total_pages }}]</span>
+                <span class="total-stat">[총 {{ "{:,}".format(total_count) }}건]</span>
+            </div>
+        </div>
+        <!-- 검색 -->
+        <form action="/board" method="get" class="search-box" style="display: flex; justify-content: flex-end; align-items: center; gap: 5px; margin-bottom: 20px;">
+            <input type="text" name="keyword" value="{{ keyword or '' }}" placeholder="검색">
+            <button type="submit" class="serach_button">검색</button>
+        </form>
+        <div id="search-results"></div>
+        
+    </div>
+
+    
+
+    <!-- 챗봇 -->
+    <div id="chat-container-wrapper">
+    
+    <button id="chatbot-btn" onclick="toggleChat()">💬</button>
+
+    <div id="chat-window">
+        <div class="chat-header">
+            <span>AI 챗봇</span> <span class="close-btn" onclick="toggleChat()">✕</span>
+        </div>
+        
+        <div id="chat-messages">
+            <div class="message ai-msg">안녕하세요! 무엇을 도와드릴까요?</div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="메시지를 입력하세요..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="send-btn" onclick="sendMessage()">
+                ➤ 
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script src="{{ url_for('static', path='admin.js') }}"></script>
+<script src="{{ url_for('static', path='chatbot.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends "admin.html" %}
+{% block content %}
+    <div class="container">
+            <form action="/admin/edit/{{post.id}}" method="post" enctype="multipart/form-data">  
+                <div class="admin-read-container">
+                    <input type="text" class="title-write" name="title" id="title" value="{{post.title}}">
+                    <textarea name="content" class="content-write" id="content">{{post.content}}</textarea>
+                    {% if user.is_admin %}
+                    <label>
+                        <input type="checkbox" name="is_notice" id="is_notice" value="true" {% if post.is_notice %}checked{% endif %}>공지사항
+                    </label>
+                    {% endif %}
+                    <div class="user-menu">
+                        <button type="submit" class="publish_button">수정 완료</button>
+                        <a href="/admin/board" class="btn-link">목록</a>                      
+                    </div>
+                </div>
+            </form>
+        </div>
+{% endblock %}
+{% block welcome_msg %}{% endblock %}

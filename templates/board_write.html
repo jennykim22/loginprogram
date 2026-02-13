@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+        <link rel="icon" href="{{ url_for('static', path='/favicon.ico') }}">
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <form method="post" action="/board/write" enctype="multipart/form-data">
+            <div class="container">
+                <div class="top-bar">
+                    <h1 class="brand-name-board">blueprint</h1>        
+                    <div class="user-menu">
+                        <button type="submit" class="publish_button" id="publishBtn" disabled>Publish</button>
+                        <a href="/board" class="btn-link">목록</a>                      
+                    </div>
+                </div>
+            </div>
+            <div class="medium-container">
+                <input type="text" class="title-write" name="title" id="title" placeholder="Title">
+                <textarea name="content" id="content" placeholder="New story..." class="content-write"></textarea>
+
+                {% if user.is_admin %}
+                <label>
+                    <input type="checkbox" name="is_notice" value="true">공지사항
+                </label>
+                {% endif %}
+            </div>
+        </form>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+        <script src="{{ url_for('static', path='admin.js') }}"></script>
+    </body>
+</html>
